@@ -1,7 +1,7 @@
 # Reporte de Análisis de Rendimiento
 
 ## Información General
-- **Fecha de Análisis:** 2025-10-17 22:09:39
+- **Fecha de Análisis:** 2025-10-17 22:15:27
 - **Archivo Analizado:** logs_ejemplo.txt
 - **Total de Líneas Procesadas:** 50
 - **Período de Tiempo:** 2024-10-17 10:23:45 - 2024-10-17 10:24:34
@@ -90,9 +90,10 @@
 - **Tipo de error más común:** 413 - 1 ocurrencias
 
 ## Patrones Identificados
-[DESCRIBIR PATRONES OBSERVADOS]
-- Ejemplo: Se observa un incremento en los tiempos de respuesta para el endpoint /api/reports
-- Ejemplo: Los errores 500 están concentrados en el endpoint /api/orders
+- Se observan picos de latencia significativos: tiempo máximo (1234.0 ms) es 4.8x mayor que el promedio
+- Se detectaron 3 errores HTTP (6.0% del total), principalmente en códigos 413
+- El endpoint más lento es /api/upload con un tiempo promedio de 1234.0 ms
+- El tiempo promedio de respuesta (254.56 ms) indica posibles problemas de rendimiento
 
 ## Recomendaciones de Optimización
 1. **Revisar y corregir errores 4xx/5xx frecuentes**

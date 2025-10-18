@@ -245,6 +245,26 @@ def generar_reporte(resultados, plantilla, salida):
     contenido = contenido.replace('[DESCRIPCION]', 'Mejora significativa en rendimiento')
     contenido = contenido.replace('[Alta/Media/Baja]', 'Alta')
     
+    patrones = []
+    if resultados['max'] > resultados['promedio'] * 3:
+        patrones.append(f"Se observan picos de latencia significativos: tiempo máximo ({resultados['max']} ms) es {round(resultados['max']/resultados['promedio'], 1)}x mayor que el promedio")
+    
+    if tasa_error > 0:
+        patrones.append(f"Se detectaron {resultados['errores']} errores HTTP ({tasa_error}% del total), principalmente en códigos {error_mas_comun[0]}")
+    
+    if len(endpoint_promedios) > 0:
+        endpoint_mas_lento = max(endpoint_promedios.items(), key=lambda x: x[1]['promedio'])
+        patrones.append(f"El endpoint más lento es {endpoint_mas_lento[0]} con un tiempo promedio de {endpoint_mas_lento[1]['promedio']} ms")
+    
+    if resultados['promedio'] > 200:
+        patrones.append(f"El tiempo promedio de respuesta ({resultados['promedio']} ms) indica posibles problemas de rendimiento")
+    
+    if len(patrones) == 0:
+        patrones.append("No se identificaron patrones críticos en el análisis de rendimiento")
+    
+    patrones_texto = "\n".join([f"- {patron}" for patron in patrones])
+    contenido = contenido.replace('[DESCRIBIR PATRONES OBSERVADOS]\n- Ejemplo: Se observa un incremento en los tiempos de respuesta para el endpoint /api/reports\n- Ejemplo: Los errores 500 están concentrados en el endpoint /api/orders', patrones_texto)
+    
     conclusiones = f"""El análisis de {resultados['total']} requests muestra un rendimiento promedio de {resultados['promedio']} ms con una tasa de error del {tasa_error}%. 
     Se identificaron {resultados['alertas']} alertas por tiempo de respuesta excesivo y {resultados['errores']} errores HTTP. 
     Los endpoints más críticos requieren optimización inmediata."""
